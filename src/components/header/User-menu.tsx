@@ -54,6 +54,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       {currentUser ? (
         <>
           <DropdownMenuTrigger className="flex p-2 bg-slate-200 border border-slate-700 rounded-full hover:bg-slate-700 group">
+            <span className="sr-only">Menu de usuário</span>
             <Avatar className="size-6">
               <AvatarImage src={currentUser.image || ''} />
               <AvatarFallback className="bg-transparent">
@@ -90,6 +91,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       ) : (
         <>
           <DropdownMenuTrigger className="flex p-2 bg-slate-200 border border-slate-700 rounded-full hover:bg-slate-700 group">
+            <span className="sr-only">Menu de usuário</span>
             <User2 className="text-slate-700 group-hover:text-slate-200" />
             <ChevronDown className="text-slate-700 group-hover:text-slate-200" />
           </DropdownMenuTrigger>

@@ -95,21 +95,25 @@ export const Footer = () => {
             <ul className="flex gap-2">
               <li className="transition-color hover:bg-slate-200 rounded-full group">
                 <Link href="#">
+                  <span className="sr-only">Facebook</span>
                   <Facebook className="m-1 transition-colors group-hover:text-slate-700" />
                 </Link>
               </li>
               <li className="transition-color hover:bg-slate-200 rounded-full group">
                 <Link href="#">
+                  <span className="sr-only">Twitter</span>
                   <Twitter className="m-1 transition-colors group-hover:text-slate-700" />
                 </Link>
               </li>
               <li className="transition-color hover:bg-slate-200 rounded-full group">
                 <Link href="#">
+                  <span className="sr-only">Instagram</span>
                   <Instagram className="m-1 transition-colors group-hover:text-slate-700" />
                 </Link>
               </li>
               <li className="transition-color hover:bg-slate-200 rounded-full group">
                 <Link href="#">
+                  <span className="sr-only">Youtube</span>
                   <Youtube className="m-1 transition-colors group-hover:text-slate-700" />
                 </Link>
               </li>

@@ -14,6 +14,7 @@ export const Cart = () => {
       href="/cart"
       className="py-2 px-4 rounded-md relative group transition-colors duration-300 hover:bg-slate-700"
     >
+      <span className="sr-only">Carrinho de compras</span>
       <ShoppingCartIcon className="text-slate-700 transition-colors duration-300 group-hover:text-slate-200" />
 
       {count > 0 && (
