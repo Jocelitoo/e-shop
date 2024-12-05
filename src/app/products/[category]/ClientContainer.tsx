@@ -47,7 +47,7 @@ export const ClientContainer: React.FC<ClientContainerProps> = ({
     if (window.innerWidth >= 550 && window.innerWidth < 768)
       setProductsPerPage(18);
     if (window.innerWidth >= 350 && window.innerWidth < 550)
-      setProductsPerPage(2);
+      setProductsPerPage(12);
     if (window.innerWidth < 350) setProductsPerPage(6);
   }, []);
 
