@@ -96,7 +96,7 @@ export const CheckoutClient = () => {
           <p className="text-green-600 text-xl">Pagamento bem sucedido</p>
 
           <a
-            href="/order"
+            href="/orders"
             className="bg-slate-700 text-white w-fit px-4 py-2 rounded-md transition-colors duration-300 hover:bg-slate-800"
           >
             Veja seus pedidos

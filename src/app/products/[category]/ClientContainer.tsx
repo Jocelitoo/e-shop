@@ -119,62 +119,64 @@ export const ClientContainer: React.FC<ClientContainerProps> = ({
 
       <ProductCard products={formatedProducts} />
 
-      <div className="flex justify-center gap-4">
-        <Button
-          variant="outline"
-          type="button"
-          disabled={currentPage === 1}
-          onClick={() => {
-            setCurrentPage((previousValue) => previousValue - 1);
-            window.scrollTo(0, 0); // Rola a página para o topo
-          }}
-        >
-          <span className="sr-only">Voltar</span>
-          <ArrowLeft />
-        </Button>
+      {products.length !== 0 && (
+        <div className="flex justify-center gap-4">
+          <Button
+            variant="outline"
+            type="button"
+            disabled={currentPage === 1}
+            onClick={() => {
+              setCurrentPage((previousValue) => previousValue - 1);
+              window.scrollTo(0, 0); // Rola a página para o topo
+            }}
+          >
+            <span className="sr-only">Voltar</span>
+            <ArrowLeft />
+          </Button>
 
-        <div className="flex justify-center gap-2">
-          {amountOfPages.map((page, index) => {
-            const isPageInRange =
-              (currentPage === 1 && page <= 3) ||
-              (currentPage === amountOfPages.length &&
-                page >= amountOfPages.length - 2) ||
-              page === currentPage ||
-              page === currentPage - 1 ||
-              page === currentPage + 1;
+          <div className="flex justify-center gap-2">
+            {amountOfPages.map((page, index) => {
+              const isPageInRange =
+                (currentPage === 1 && page <= 3) ||
+                (currentPage === amountOfPages.length &&
+                  page >= amountOfPages.length - 2) ||
+                page === currentPage ||
+                page === currentPage - 1 ||
+                page === currentPage + 1;
 
-            return (
-              isPageInRange && (
-                <Button
-                  key={index}
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setCurrentPage(page);
-                    window.scrollTo(0, 0); // Rola a página para o topo
-                  }}
-                  className={`${currentPage === page && 'bg-slate-100'}`}
-                >
-                  {page}
-                </Button>
-              )
-            );
-          })}
+              return (
+                isPageInRange && (
+                  <Button
+                    key={index}
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setCurrentPage(page);
+                      window.scrollTo(0, 0); // Rola a página para o topo
+                    }}
+                    className={`${currentPage === page && 'bg-slate-100'}`}
+                  >
+                    {page}
+                  </Button>
+                )
+              );
+            })}
+          </div>
+
+          <Button
+            variant="outline"
+            type="button"
+            disabled={currentPage === amountOfPages.length}
+            onClick={() => {
+              setCurrentPage((previousValue) => previousValue + 1);
+              window.scrollTo(0, 0); // Rola a página para o topo
+            }}
+          >
+            <span className="sr-only">Avançar</span>
+            <ArrowRight />
+          </Button>
         </div>
-
-        <Button
-          variant="outline"
-          type="button"
-          disabled={currentPage === amountOfPages.length}
-          onClick={() => {
-            setCurrentPage((previousValue) => previousValue + 1);
-            window.scrollTo(0, 0); // Rola a página para o topo
-          }}
-        >
-          <span className="sr-only">Avançar</span>
-          <ArrowRight />
-        </Button>
-      </div>
+      )}
     </div>
   );
 };
