@@ -125,23 +125,20 @@ export const AddProduct: React.FC<AddProductProps> = ({ currentUser }) => {
 
     axios
       .post('/api/product', newProduct)
-      .then((callback) => {
-        if (callback.statusText === 'OK') {
-          router.push('/admin/manage-products'); // Direciona o usuário para a pagina /admin/manage-products
-          router.refresh(); // Recarrega a página
+      .then((response) => {
+        router.push('/admin/manage-products'); // Direciona o usuário para a pagina /admin/manage-products
+        router.refresh(); // Recarrega a página
 
-          toast({
-            description: 'Produto criado com sucesso',
-            style: { backgroundColor: '#16a34a', color: '#fff' },
-          });
-        }
-
-        if (callback.statusText !== 'OK') {
-          toast({
-            description: callback.statusText,
-            style: { backgroundColor: '#dd1212', color: '#fff' },
-          });
-        }
+        toast({
+          description: response.data,
+          style: { backgroundColor: '#16a34a', color: '#fff' },
+        });
+      })
+      .catch((error) => {
+        toast({
+          description: error.response.data.message,
+          style: { backgroundColor: '#dd1212', color: '#fff' },
+        });
       })
       .finally(() => {
         setIsLoading(false);

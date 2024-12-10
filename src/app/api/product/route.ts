@@ -44,15 +44,22 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: Request) {
-  const body = await request.json();
-  const { id, updatedProduct } = body.data;
+  try {
+    const body = await request.json();
+    const { id, updatedProduct } = body.data;
 
-  const product = await prisma.product.update({
-    where: { id: id },
-    data: updatedProduct,
-  });
+    await prisma.product.update({
+      where: { id: id },
+      data: updatedProduct,
+    });
 
-  return NextResponse.json(product);
+    return NextResponse.json('Produto editado com sucesso');
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Erro ao atualizar produto' },
+      { status: 500 },
+    );
+  }
 }
 
 export async function DELETE(request: Request) {
