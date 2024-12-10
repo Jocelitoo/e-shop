@@ -5,23 +5,30 @@ import { deleteImage } from '../sign-cloudinary-params/route';
 import { ImageProps } from '@/utils/props';
 
 export async function POST(request: Request) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  const { name, description, price, brand, category, inStock, images } = body;
+    const { name, description, price, brand, category, inStock, images } = body;
 
-  const product = await prisma.product.create({
-    data: {
-      name,
-      description,
-      price,
-      brand,
-      category,
-      inStock,
-      images,
-    },
-  });
+    await prisma.product.create({
+      data: {
+        name,
+        description,
+        price,
+        brand,
+        category,
+        inStock,
+        images,
+      },
+    });
 
-  return NextResponse.json(product);
+    return NextResponse.json('Produto criado com sucesso');
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Erro ao criar produto' },
+      { status: 500 },
+    );
+  }
 }
 
 export async function GET(request: NextRequest) {
