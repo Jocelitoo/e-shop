@@ -166,7 +166,7 @@ export const columns: ColumnDef<OrderProps>[] = [
 
       return (
         <>
-          {isLoading && <LoadingScreen text="Carregando..." />}
+          {isLoading && <LoadingScreen text="Atualizando pedido..." />}
 
           <div className="flex gap-4">
             <button

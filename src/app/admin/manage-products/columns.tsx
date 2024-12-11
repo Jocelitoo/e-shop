@@ -132,7 +132,7 @@ export const columns: ColumnDef<ProductProps>[] = [
 
       return (
         <>
-          {isLoading && <LoadingScreen text="Carregando..." />}
+          {isLoading && <LoadingScreen text="Deletando produto..." />}
           <div className="flex gap-4">
             <Link
               href={`/edit/${product.id}`}

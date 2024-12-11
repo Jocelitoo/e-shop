@@ -98,14 +98,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
       <div className="flex flex-col gap-4 p-4 rounded-sm w-full min-w-[250px] max-w-[500px] bg-slate-50 shadow-xl">
         <h1 className="font-bold text-xl text-center">Login</h1>
 
-        <Button
+        {/* <Button
           type="button"
           variant={'outline'}
           onClick={() => signIn('google')}
           className="transition-colors duration-300 hover:bg-slate-200"
         >
           Login com o Google
-        </Button>
+        </Button> */}
 
         <form
           onSubmit={form.handleSubmit(onSubmit)}

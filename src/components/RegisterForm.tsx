@@ -87,7 +87,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
           redirect: false,
         }).then((callback) => {
           if (callback?.ok) {
-            router.push('/cart'); // Redireciona para o cart
+            router.push('/verifyOTP'); // Redireciona para a página de verificação de OTP
             router.refresh();
 
             toast({
@@ -126,14 +126,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
       <div className="flex flex-col gap-4 p-4 rounded-sm w-full min-w-[250px] max-w-[500px] bg-slate-50 shadow-xl">
         <h1 className="font-bold text-xl text-center">Registrar-se</h1>
 
-        <Button
+        {/* <Button
           type="button"
           variant={'outline'}
           onClick={() => signIn('google')}
           className="transition-colors duration-300 hover:bg-slate-200"
         >
           Registrar-se com o Google
-        </Button>
+        </Button> */}
 
         <form
           onSubmit={form.handleSubmit(onSubmit)}
