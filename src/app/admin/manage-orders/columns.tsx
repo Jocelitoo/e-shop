@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
 import { OrderProps } from '@/utils/props';
@@ -9,6 +10,8 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import dayjs from 'dayjs';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
+import { LoadingScreen } from '@/components/LoadingScreen';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -109,11 +112,14 @@ export const columns: ColumnDef<OrderProps>[] = [
     header: 'Ações',
     cell: ({ row }) => {
       const order = row.original;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+
       const { toast } = useToast();
+      const [isLoading, setIsLoading] = useState(false);
 
       const manualDispatch = () => {
         if (order.status === 'Pago') {
+          setIsLoading(true);
+
           axios
             .patch('/api/order', { id: order.id, deliveryStatus: 'Enviado' })
             .then((response) => {
@@ -129,12 +135,15 @@ export const columns: ColumnDef<OrderProps>[] = [
                 description: error.response.data.message,
                 style: { backgroundColor: '#dd1212', color: '#fff' },
               });
-            });
+            })
+            .finally(() => setIsLoading(false));
         }
       };
 
       const manualDelivery = () => {
         if (order.status === 'Pago') {
+          setIsLoading(true);
+
           axios
             .patch('/api/order', { id: order.id, deliveryStatus: 'Entregue' })
             .then((response) => {
@@ -150,38 +159,43 @@ export const columns: ColumnDef<OrderProps>[] = [
                 description: error.response.data.message,
                 style: { backgroundColor: '#dd1212', color: '#fff' },
               });
-            });
+            })
+            .finally(() => setIsLoading(false));
         }
       };
 
       return (
-        <div className="flex gap-4">
-          <button
-            disabled={order.status === 'Pendente'}
-            onClick={() => manualDispatch()}
-            className={`flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300 ${order.status === 'Pendente' && 'hover:cursor-not-allowed'}`}
-          >
-            <span className="sr-only">Enviado</span>
-            <Bike className="size-5" />
-          </button>
+        <>
+          {isLoading && <LoadingScreen text="Carregando..." />}
 
-          <button
-            disabled={order.status === 'Pendente'}
-            onClick={() => manualDelivery()}
-            className={`flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300 ${order.status === 'Pendente' && 'hover:cursor-not-allowed'}`}
-          >
-            <span className="sr-only">Entregue</span>
-            <Check className="size-5" />
-          </button>
+          <div className="flex gap-4">
+            <button
+              disabled={order.status === 'Pendente'}
+              onClick={() => manualDispatch()}
+              className={`flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300 ${order.status === 'Pendente' && 'hover:cursor-not-allowed'}`}
+            >
+              <span className="sr-only">Enviado</span>
+              <Bike className="size-5" />
+            </button>
 
-          <Link
-            href={`/order/${order.id}`}
-            className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
-          >
-            <span className="sr-only">Ver pedido</span>
-            <Eye className="size-5" />
-          </Link>
-        </div>
+            <button
+              disabled={order.status === 'Pendente'}
+              onClick={() => manualDelivery()}
+              className={`flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300 ${order.status === 'Pendente' && 'hover:cursor-not-allowed'}`}
+            >
+              <span className="sr-only">Entregue</span>
+              <Check className="size-5" />
+            </button>
+
+            <Link
+              href={`/order/${order.id}`}
+              className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+            >
+              <span className="sr-only">Ver pedido</span>
+              <Eye className="size-5" />
+            </Link>
+          </div>
+        </>
       );
     },
   },

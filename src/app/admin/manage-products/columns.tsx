@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
+import { LoadingScreen } from '@/components/LoadingScreen';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +26,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export const columns: ColumnDef<ProductProps>[] = [
   {
@@ -97,10 +100,12 @@ export const columns: ColumnDef<ProductProps>[] = [
     cell: ({ row }) => {
       const product = row.original;
 
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       const { toast } = useToast();
+      const [isLoading, setIsLoading] = useState(false);
 
       const deleteProduct = () => {
+        setIsLoading(true);
+
         axios
           .delete('/api/product', {
             data: {
@@ -121,57 +126,61 @@ export const columns: ColumnDef<ProductProps>[] = [
               description: error.response.data.message,
               style: { backgroundColor: '#dd1212', color: '#fff' },
             });
-          });
+          })
+          .finally(() => setIsLoading(false));
       };
 
       return (
-        <div className="flex gap-4">
-          <Link
-            href={`/edit/${product.id}`}
-            className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
-          >
-            <span className="sr-only">Editar</span>
-            <SquarePen className="size-5" />
-          </Link>
+        <>
+          {isLoading && <LoadingScreen text="Carregando..." />}
+          <div className="flex gap-4">
+            <Link
+              href={`/edit/${product.id}`}
+              className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+            >
+              <span className="sr-only">Editar</span>
+              <SquarePen className="size-5" />
+            </Link>
 
-          <Link
-            href={`/product/${product.id}`}
-            className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
-          >
-            <span className="sr-only">Ver produto</span>
-            <Eye className="size-5" />
-          </Link>
+            <Link
+              href={`/product/${product.id}`}
+              className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300"
+            >
+              <span className="sr-only">Ver produto</span>
+              <Eye className="size-5" />
+            </Link>
 
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <button className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300">
-                <span className="sr-only">Deletar</span>
-                <Trash2 className="size-5" />
-              </button>
-            </AlertDialogTrigger>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button className="flex items-center outline outline-1 outline-gray-400 rounded-md px-4 py-2 transition-colors duration-300 hover:bg-gray-300">
+                  <span className="sr-only">Deletar</span>
+                  <Trash2 className="size-5" />
+                </button>
+              </AlertDialogTrigger>
 
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Essa ação não poderá ser desfeita
-                </AlertDialogDescription>
-              </AlertDialogHeader>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Essa ação não poderá ser desfeita
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
 
-              <AlertDialogFooter>
-                <AlertDialogCancel className="transition-colors duration-300">
-                  Cancelar
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-red-600 transition-colors duration-300 hover:bg-red-800 "
-                  onClick={() => deleteProduct()}
-                >
-                  Deletar
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="transition-colors duration-300">
+                    Cancelar
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 transition-colors duration-300 hover:bg-red-800 "
+                    onClick={() => deleteProduct()}
+                  >
+                    Deletar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </>
       );
     },
   },
