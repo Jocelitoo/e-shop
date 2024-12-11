@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
 import { CurrentUserProps } from '@/utils/props';
 import {
   ColumnDef,
@@ -22,23 +23,47 @@ import {
   useReactTable,
   VisibilityState,
 } from '@tanstack/react-table';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import axios from 'axios';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
   currentUser: CurrentUserProps | null;
 }
 
 export const DataTable = <TData, TValue>({
   columns,
-  data,
   currentUser,
 }: DataTableProps<TData, TValue>) => {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const [data, setData] = useState<TData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const getData = () => {
+    axios
+      .get('/api/order')
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        toast({
+          description: error.response.data.message,
+          style: { backgroundColor: '#dd1212', color: '#fff' },
+        });
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const table = useReactTable({
     data,
@@ -62,8 +87,6 @@ export const DataTable = <TData, TValue>({
       ],
     },
   });
-
-  const router = useRouter();
 
   // Redirecionar o usuário deslogado ou o usuário que n é ADMIN para a Home
   useEffect(() => {
@@ -102,6 +125,7 @@ export const DataTable = <TData, TValue>({
                   </TableRow>
                 ))}
               </TableHeader>
+
               <TableBody>
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
@@ -121,11 +145,17 @@ export const DataTable = <TData, TValue>({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      Sem resultados
+                    <TableCell colSpan={columns.length}>
+                      {isLoading ? (
+                        <span className="flex gap-2 items-center justify-center">
+                          <Loader2 className="animate-spin" /> Carregando
+                          pedidos...
+                        </span>
+                      ) : (
+                        <span className="flex gap-2 items-center justify-center">
+                          Sem resultados
+                        </span>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}

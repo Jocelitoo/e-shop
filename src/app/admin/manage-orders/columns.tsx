@@ -10,8 +10,6 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import updateLocale from 'dayjs/plugin/updateLocale';
 import dayjs from 'dayjs';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
-import { LoadingScreen } from '@/components/LoadingScreen';
 
 dayjs.extend(relativeTime);
 dayjs.extend(updateLocale);
@@ -114,12 +112,9 @@ export const columns: ColumnDef<OrderProps>[] = [
       const order = row.original;
 
       const { toast } = useToast();
-      const [isLoading, setIsLoading] = useState(false);
 
       const manualDispatch = () => {
         if (order.status === 'Pago') {
-          setIsLoading(true);
-
           axios
             .patch('/api/order', { id: order.id, deliveryStatus: 'Enviado' })
             .then((response) => {
@@ -135,15 +130,12 @@ export const columns: ColumnDef<OrderProps>[] = [
                 description: error.response.data.message,
                 style: { backgroundColor: '#dd1212', color: '#fff' },
               });
-            })
-            .finally(() => setIsLoading(false));
+            });
         }
       };
 
       const manualDelivery = () => {
         if (order.status === 'Pago') {
-          setIsLoading(true);
-
           axios
             .patch('/api/order', { id: order.id, deliveryStatus: 'Entregue' })
             .then((response) => {
@@ -159,14 +151,13 @@ export const columns: ColumnDef<OrderProps>[] = [
                 description: error.response.data.message,
                 style: { backgroundColor: '#dd1212', color: '#fff' },
               });
-            })
-            .finally(() => setIsLoading(false));
+            });
         }
       };
 
       return (
         <>
-          {isLoading && <LoadingScreen text="Atualizando pedido..." />}
+          {/* {isLoading && <LoadingScreen text="Atualizando pedido..." />} */}
 
           <div className="flex gap-4">
             <button

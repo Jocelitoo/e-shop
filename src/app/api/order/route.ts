@@ -2,17 +2,24 @@ import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = request.nextUrl; // Pega os parâmetros
-  const orderId = searchParams.get('id'); // Pega o parâmetro de nome 'id'
+  try {
+    const { searchParams } = request.nextUrl; // Pega os parâmetros
+    const orderId = searchParams.get('id'); // Pega o parâmetro de nome 'id'
 
-  if (orderId) {
-    // Pegar apenas 1 order
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    return NextResponse.json(order);
-  } else {
-    // Pegar todas as orders
-    const orders = await prisma.order.findMany();
-    return NextResponse.json(orders);
+    if (orderId) {
+      // Pegar apenas 1 order
+      const order = await prisma.order.findUnique({ where: { id: orderId } });
+      return NextResponse.json(order);
+    } else {
+      // Pegar todas as orders
+      const orders = await prisma.order.findMany();
+      return NextResponse.json(orders);
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Erro ao retornar os pedido' },
+      { status: 500 },
+    );
   }
 }
 
