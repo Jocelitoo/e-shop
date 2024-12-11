@@ -70,19 +70,26 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const body = await request.json();
-  const { id, images } = body;
+  try {
+    const body = await request.json();
+    const { id, images } = body;
 
-  // Deleta o produto do banco de dados através do seu id
-  const deletedProduct = await prisma.product.delete({
-    where: { id: id },
-  });
+    // Deleta o produto do banco de dados através do seu id
+    await prisma.product.delete({
+      where: { id: id },
+    });
 
-  // Faz o map das imagens para deletar uma por uma do cloudinary
-  images.map((image: ImageProps) => {
-    const imageId = extractPublicId(image.image); // Pega o id da imagem através da sua URL
-    deleteImage(imageId); // Deleta a imagem
-  });
+    // Faz o map das imagens para deletar uma por uma do cloudinary
+    images.map((image: ImageProps) => {
+      const imageId = extractPublicId(image.image); // Pega o id da imagem através da sua URL
+      deleteImage(imageId); // Deleta a imagem
+    });
 
-  return NextResponse.json(deletedProduct);
+    return NextResponse.json('Produto deletado');
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Erro ao deletar produto' },
+      { status: 500 },
+    );
+  }
 }

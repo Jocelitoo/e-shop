@@ -108,19 +108,19 @@ export const columns: ColumnDef<ProductProps>[] = [
               images: product.images,
             },
           })
-          .then((callback) => {
-            if (callback.statusText === 'OK') {
-              window.location.reload(); // Recarrega a página para o item removido desaparecer
+          .then((response) => {
+            window.location.reload(); // Recarrega a página para o item removido desaparecer
 
-              toast({
-                description: 'Produto deletado',
-                style: { backgroundColor: '#16a34a', color: '#fff' },
-              });
-            }
-
-            if (callback.statusText !== 'OK') {
-              console.log(callback.statusText);
-            }
+            toast({
+              description: response.data,
+              style: { backgroundColor: '#16a34a', color: '#fff' },
+            });
+          })
+          .catch((error) => {
+            toast({
+              description: error.response.data.message,
+              style: { backgroundColor: '#dd1212', color: '#fff' },
+            });
           });
       };
 

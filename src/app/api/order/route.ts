@@ -21,13 +21,20 @@ export async function GET(request: NextRequest) {
 // patch --> Atualizar apenas uma parte do dado. Exemplo: {name: 'joão', age: 23} --> Atualizou apenas o 'age'
 
 export async function PATCH(request: Request) {
-  const body = await request.json();
-  const { id, deliveryStatus } = body;
+  try {
+    const body = await request.json();
+    const { id, deliveryStatus } = body;
 
-  const order = await prisma.order.update({
-    where: { id: id },
-    data: { deliveryStatus: deliveryStatus },
-  });
+    await prisma.order.update({
+      where: { id: id },
+      data: { deliveryStatus: deliveryStatus },
+    });
 
-  return NextResponse.json(order);
+    return NextResponse.json('Pedido atualizado');
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Erro ao atualizar pedido' },
+      { status: 500 },
+    );
+  }
 }
