@@ -61,7 +61,24 @@ export const DataTable = <TData, TValue>({
   };
 
   useEffect(() => {
+    // Redirecionar o usuário deslogado ou o usuário que n é ADMIN para a Home
+    if (!currentUser || currentUser.role !== 'ADMIN') {
+      router.push('/'); // Redireciona para a Home
+      router.refresh(); // Recarrega a página atual
+    }
+
+    // Pegar os dados da base de dados
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser]);
+
+  // Pegar automaticamente os dados da base de dados a cada 10 minutos
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getData();
+    }, 600000); // 600 seconds (10min)
+
+    return () => clearInterval(intervalId); // Clean up the interval on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -87,15 +104,6 @@ export const DataTable = <TData, TValue>({
       ],
     },
   });
-
-  // Redirecionar o usuário deslogado ou o usuário que n é ADMIN para a Home
-  useEffect(() => {
-    if (!currentUser || currentUser.role !== 'ADMIN') {
-      router.push('/'); // Redireciona para a Home
-      router.refresh(); // Recarrega a página atual
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
 
   return (
     <Container>
@@ -157,6 +165,12 @@ export const DataTable = <TData, TValue>({
                         </span>
                       )}
                     </TableCell>
+
+                    {/* <TableCell colSpan={columns.length}>
+                      <span className="flex gap-2 items-center justify-center">
+                        Sem resultados
+                      </span>
+                    </TableCell> */}
                   </TableRow>
                 )}
               </TableBody>
